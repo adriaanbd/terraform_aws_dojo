@@ -1,5 +1,7 @@
 resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr
+  cidr_block            = var.vpc_cidr
+  enable_dns_support    = true  # defaults to true
+  enable_dns_hostnames  = true  # defaults to false
 
   tags = {
     Name        = "${var.namespace}-vpc"
@@ -56,6 +58,14 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml
+    from_port   = 8  # from icmp parameter type "Echo"
+    to_port     = 0  # from icmp parameter type "Echo Reply"
+    protocol    = "icmp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
