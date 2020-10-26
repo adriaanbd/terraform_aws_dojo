@@ -25,11 +25,13 @@ variable "ami" {
 variable "vpc_cidr" {
   description = "The CIDR block for VPC"
   type        = string
+  default     = "10.0.0.0/24"
 }
 
 variable "pub_sub_cidr" {
   description = "The CIDR block for Public Subnet"
   type        = string
+  default     = "10.0.0.0/26"
 }
 
 variable "key_name" {
