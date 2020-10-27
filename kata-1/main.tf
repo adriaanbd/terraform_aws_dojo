@@ -75,8 +75,12 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
+data "aws_ssm_parameter" "ami" {
+  name = var.ami
+}
+
 resource "aws_instance" "bastion_host" {
-  ami                    = var.ami
+  ami                    = data.aws_ssm_parameter.ami.value
   instance_type          = var.instance_type
   key_name               = var.key_name
   subnet_id              = aws_subnet.main.id

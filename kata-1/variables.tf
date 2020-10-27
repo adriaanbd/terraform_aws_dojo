@@ -17,9 +17,10 @@ variable "az" {
 }
 
 variable "ami" {
-  description = "Amazon Machine Image"
+  description = "Name of the AWS SSM Parameter for Amazon Machine Image"
   type        = string
-  default     = "ami-0947d2ba12ee1ff75" # Amazon Linux 2 AMI (HVM), SSD Volume Type
+  # Amazon Linux 2 AMI (HVM) - Free Tier
+  default     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
 variable "vpc_cidr" {
