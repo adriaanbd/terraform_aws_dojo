@@ -54,32 +54,38 @@ resource "aws_security_group" "bastion_sg" {
   description   = "Allow SSH"
   vpc_id        = aws_vpc.main.id  # if not provided defaults to default VPC
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    security_groups = [aws_security_group.app_a_sg.id]
-  }
-
-  egress {
-    # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml
-    from_port   = 8  # from icmp parameter type "Echo"
-    to_port     = 0  # from icmp parameter type "Echo Reply"
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name        = "${var.namespace}-sg"
     Environemnt = "dev"
   }
+}
+
+resource "aws_security_group_rule" "ssh_bastion" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.bastion_sg.id
+}
+
+resource "aws_security_group_rule" "ssh_jump" {
+  type                      = "egress"
+  from_port                 = 22
+  to_port                   = 22
+  protocol                  = "tcp"
+  source_security_group_id  = aws_security_group.app_a_sg.id
+  security_group_id         = aws_security_group.bastion_sg.id
+}
+
+resource "aws_security_group_rule" "bastion_echo_request" {
+  type              = "egress"
+  # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml
+  from_port         = 8  # echo request
+  to_port           = 0  # echo reply
+  protocol          = "icmp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.bastion_sg.id
 }
 
 data "aws_ssm_parameter" "ami" {
@@ -149,28 +155,31 @@ resource "aws_route_table_association" "app_a_rt_assoc" {
 
 resource "aws_security_group" "app_a_sg" {
   name          = "app_a-sg"
-  description   = "Allow SSH"
+  description   = "The Security "
   vpc_id        = aws_vpc.main.id  # if not provided defaults to default VPC
-
-  ingress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    security_groups = [aws_security_group.bastion_sg.id]
-  }
-
-  egress {
-    # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml
-    from_port   = 8  # from icmp parameter type "Echo"
-    to_port     = 0  # from icmp parameter type "Echo Reply"
-    protocol    = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   tags = {
     Name        = "${var.namespace}-app_a-sg"
     Environemnt = "dev"
   }
+}
+
+resource "aws_security_group_rule" "app_echo_request" {
+  type              = "egress"
+  from_port         = 8  # echo request
+  to_port           = 0  # echo reply
+  protocol          = "icmp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_a_sg.id
+}
+
+resource "aws_security_group_rule" "ssh_from_jump" {
+  type                      = "ingress"
+  from_port                 = 22
+  to_port                   = 22
+  protocol                  = "tcp"
+  source_security_group_id  = aws_security_group.bastion_sg.id
+  security_group_id         = aws_security_group.app_a_sg.id
 }
 
 resource "aws_instance" "app_host" {
