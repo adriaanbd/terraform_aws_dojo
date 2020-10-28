@@ -9,9 +9,21 @@ variable "region" {
   type        = string
 }
 
-variable "az" {
+variable "az_a" {
   description = "AWS Availability Zone"
   default     = "us-east-1a"
+  type        = string
+}
+
+variable "az_b" {
+  description = "AWS Availability Zone"
+  default     = "us-east-1b"
+  type        = string
+}
+
+variable "az_c" {
+  description = "AWS Availability Zone"
+  default     = "us-east-1c"
   type        = string
 }
 

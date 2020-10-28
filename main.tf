@@ -91,7 +91,7 @@ resource "aws_nat_gateway" "ngw_c" {
 resource "aws_subnet" "pub_a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.pub_sub_a_cidr
-  availability_zone       = var.az
+  availability_zone       = var.az_a
   map_public_ip_on_launch = true
 
   tags = {
@@ -103,7 +103,7 @@ resource "aws_subnet" "pub_a" {
 resource "aws_subnet" "pub_b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.pub_sub_b_cidr
-  availability_zone       = var.az
+  availability_zone       = var.az_b
   map_public_ip_on_launch = true
 
   tags = {
@@ -115,7 +115,7 @@ resource "aws_subnet" "pub_b" {
 resource "aws_subnet" "pub_c" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.pub_sub_c_cidr
-  availability_zone       = var.az
+  availability_zone       = var.az_c
   map_public_ip_on_launch = true
 
   tags = {
@@ -129,7 +129,7 @@ resource "aws_subnet" "pub_c" {
 resource "aws_subnet" "priv_a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.priv_sub_a_cidr
-  availability_zone       = var.az
+  availability_zone       = var.az_a
   map_public_ip_on_launch = false  # accessible via internet gateway
 
   tags = {
@@ -141,7 +141,7 @@ resource "aws_subnet" "priv_a" {
 resource "aws_subnet" "priv_b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.priv_sub_b_cidr
-  availability_zone       = var.az
+  availability_zone       = var.az_b
   map_public_ip_on_launch = false
 
   tags = {
@@ -153,7 +153,7 @@ resource "aws_subnet" "priv_b" {
 resource "aws_subnet" "priv_c" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.priv_sub_c_cidr
-  availability_zone       = var.az
+  availability_zone       = var.az_c
   map_public_ip_on_launch = false
 
   tags = {
