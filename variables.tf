@@ -3,7 +3,6 @@ variable "namespace" {
   type        = string
 }
 
-
 variable "region" {
   description = "AWS Region"
   default     = "us-east-1"
@@ -29,16 +28,40 @@ variable "vpc_cidr" {
   default     = "172.16.0.0/16"
 }
 
-variable "pub_sub_cidr" {
+variable "pub_sub_a_cidr" {
   description = "The CIDR block for Public Subnet"
   type        = string
   default     = "172.16.1.0/24"
 }
 
-variable "priv_sub_cidr" {
+variable "pub_sub_b_cidr" {
+  description = "The CIDR block for Public Subnet"
+  type        = string
+  default     = "172.16.2.0/24"
+}
+
+variable "pub_sub_c_cidr" {
+  description = "The CIDR block for Public Subnet"
+  type        = string
+  default     = "172.16.3.0/24"
+}
+
+variable "priv_sub_a_cidr" {
   description = "The CIDR block for Private Subnet"
   type        = string
   default     = "172.16.4.0/24"
+}
+
+variable "priv_sub_b_cidr" {
+  description = "The CIDR block for Private Subnet"
+  type        = string
+  default     = "172.16.5.0/24"
+}
+
+variable "priv_sub_c_cidr" {
+  description = "The CIDR block for Private Subnet"
+  type        = string
+  default     = "172.16.6.0/24"
 }
 
 variable "key_name" {
