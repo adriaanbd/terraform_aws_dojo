@@ -30,7 +30,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_route_table" "rt" {
+resource "aws_route_table" "pub-rt" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -46,10 +46,10 @@ resource "aws_route_table" "rt" {
 
 resource "aws_route_table_association" "rt-assoc" {
   subnet_id      = aws_subnet.pub_a.id
-  route_table_id = aws_route_table.rt.id
+  route_table_id = aws_route_table.pub-rt.id
 }
 
-resource "aws_security_group" "ec2_sg" {
+resource "aws_security_group" "bastion_sg" {
   name          = "bastion-sg"
   description   = "Allow SSH"
   vpc_id        = aws_vpc.main.id  # if not provided defaults to default VPC
@@ -59,6 +59,13 @@ resource "aws_security_group" "ec2_sg" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = [aws_security_group.app_a_sg.id]
   }
 
   egress {
@@ -84,7 +91,7 @@ resource "aws_instance" "bastion_host" {
   instance_type          = var.instance_type
   key_name               = var.key_name
   subnet_id              = aws_subnet.pub_a.id
-  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
   tags = {
     Name        = "${var.namespace}-ec2"
     Environemnt = "dev"
@@ -121,7 +128,7 @@ resource "aws_subnet" "app_a" {
   }
 }
 
-resource "aws_route_table" "app_a-rt" {
+resource "aws_route_table" "app_a_rt" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -130,17 +137,17 @@ resource "aws_route_table" "app_a-rt" {
   }
 
   tags = {
-    Name        = "${var.namespace}-app_a-rt"
+    Name        = "${var.namespace}-app_a_rt"
     Environment = "dev"
   }
 }
 
-resource "aws_route_table_association" "app_a-rt_assoc" {
-  subnet_id      = aws_subnet.pub_a.id
-  route_table_id = aws_route_table.rt.id
+resource "aws_route_table_association" "app_a_rt_assoc" {
+  subnet_id      = aws_subnet.app_a.id
+  route_table_id = aws_route_table.app_a_rt.id
 }
 
-resource "aws_security_group" "app_a-sg" {
+resource "aws_security_group" "app_a_sg" {
   name          = "app_a-sg"
   description   = "Allow SSH"
   vpc_id        = aws_vpc.main.id  # if not provided defaults to default VPC
@@ -149,7 +156,7 @@ resource "aws_security_group" "app_a-sg" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_sg.id]
+    security_groups = [aws_security_group.bastion_sg.id]
   }
 
   egress {
@@ -170,8 +177,8 @@ resource "aws_instance" "app_host" {
   ami                    = data.aws_ssm_parameter.ami.value
   instance_type          = var.instance_type
   key_name               = var.key_name
-  subnet_id              = aws_subnet.pub_a.id
-  vpc_security_group_ids = [aws_security_group.app_a-sg.id]
+  subnet_id              = aws_subnet.app_a.id
+  vpc_security_group_ids = [aws_security_group.app_a_sg.id]
   tags = {
     Name                 = "${var.namespace}-ec2-app_host"
     Env                  = "dev"
