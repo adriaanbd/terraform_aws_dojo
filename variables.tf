@@ -99,11 +99,6 @@ variable "key_name" {
   type        = string
 }
 
-variable "key_path" {
-  description = "Key path for SSH"
-  type        = string
-}
-
 variable "instance_type" {
   description = "EC2 Instance Type"
   default     = "t2.micro"

@@ -64,3 +64,7 @@ $ yum check-updates
 ```
 $ terraform destroy -auto-approve
 ```
+
+## Future Updates
+
+The code needs to be modularized and some best practices need to be implemented. At the moment there are over 600+ lines of code and it's cumbersome to make changes in the right places.
