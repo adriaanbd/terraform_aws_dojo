@@ -76,6 +76,24 @@ variable "priv_sub_app_c_cidr" {
   default     = "172.16.6.0/24"
 }
 
+variable "priv_sub_ddbb_a_cidr" {
+  description = "The CIDR block for Private Subnet"
+  type        = string
+  default     = "172.16.7.0/24"
+}
+
+variable "priv_sub_ddbb_b_cidr" {
+  description = "The CIDR block for Private Subnet"
+  type        = string
+  default     = "172.16.8.0/24"
+}
+
+variable "priv_sub_ddbb_c_cidr" {
+  description = "The CIDR block for Private Subnet"
+  type        = string
+  default     = "172.16.9.0/24"
+}
+
 variable "key_name" {
   description = "Key Name for SSH"
   type        = string
