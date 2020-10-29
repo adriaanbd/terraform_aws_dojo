@@ -10,3 +10,7 @@ Expand the VPC from Kata No. 2 to include:
 Constraints:
 The same constraints for Kata No. 2
 The deployments need to be in different Availability Zones
+
+## Comments
+
+With over 600+ lines of code, it is becoming increasingly burdensome to make changes in the right places.
