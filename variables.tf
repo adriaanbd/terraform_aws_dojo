@@ -58,19 +58,19 @@ variable "pub_sub_c_cidr" {
   default     = "172.16.3.0/24"
 }
 
-variable "priv_sub_a_cidr" {
+variable "priv_sub_app_a_cidr" {
   description = "The CIDR block for Private Subnet"
   type        = string
   default     = "172.16.4.0/24"
 }
 
-variable "priv_sub_b_cidr" {
+variable "priv_sub_app_b_cidr" {
   description = "The CIDR block for Private Subnet"
   type        = string
   default     = "172.16.5.0/24"
 }
 
-variable "priv_sub_c_cidr" {
+variable "priv_sub_app_c_cidr" {
   description = "The CIDR block for Private Subnet"
   type        = string
   default     = "172.16.6.0/24"

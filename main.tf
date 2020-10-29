@@ -95,7 +95,7 @@ resource "aws_subnet" "pub_a" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.namespace}-subnet_a"
+    Name        = "${var.namespace}-pub_subnet_a"
     Environment = "dev"
   }
 }
@@ -107,7 +107,7 @@ resource "aws_subnet" "pub_b" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.namespace}-subnet_b"
+    Name        = "${var.namespace}-pub_subnet_b"
     Environment = "dev"
   }
 }
@@ -119,45 +119,45 @@ resource "aws_subnet" "pub_c" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name        = "${var.namespace}-subnet_c"
+    Name        = "${var.namespace}-pub_subnet_c"
     Environment = "dev"
   }
 }
 
 ###   PRIVATE   ###
 
-resource "aws_subnet" "priv_a" {
+resource "aws_subnet" "priv_sub_app_a" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.priv_sub_a_cidr
+  cidr_block              = var.priv_sub_app_a_cidr
   availability_zone       = var.az_a
   map_public_ip_on_launch = false  # accessible via internet gateway
 
   tags = {
-    Name                  = "${var.namespace}-subnet-app_a"
+    Name                  = "${var.namespace}-priv_sub_app_a"
     Environment           = "dev"
   }
 }
 
-resource "aws_subnet" "priv_b" {
+resource "aws_subnet" "priv_sub_app_b" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.priv_sub_b_cidr
+  cidr_block              = var.priv_sub_app_b_cidr
   availability_zone       = var.az_b
   map_public_ip_on_launch = false
 
   tags = {
-    Name                  = "${var.namespace}-subnet-app_b"
+    Name                  = "${var.namespace}-priv_sub_app_b"
     Environment           = "dev"
   }
 }
 
-resource "aws_subnet" "priv_c" {
+resource "aws_subnet" "priv_sub_app_c" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.priv_sub_c_cidr
+  cidr_block              = var.priv_sub_app_c_cidr
   availability_zone       = var.az_c
   map_public_ip_on_launch = false
 
   tags = {
-    Name                  = "${var.namespace}-subnet-app_c"
+    Name                  = "${var.namespace}-priv_sub_app_c"
     Environment           = "dev"
   }
 }
@@ -258,7 +258,7 @@ resource "aws_route_table" "priv_rt_c" {
 ###     ROUTE ASSOCIATIONS    ###
 #################################
 
-###   PUBLIC    ###
+###           PUBLIC          ###
 
 resource "aws_route_table_association" "rt_assoc_a" {
   subnet_id      = aws_subnet.pub_a.id
@@ -275,20 +275,20 @@ resource "aws_route_table_association" "rt_assoc_c" {
   route_table_id = aws_route_table.pub_rt_c.id
 }
 
-###   PRIVATE   ###
+###           PRIVATE         ###
 
 resource "aws_route_table_association" "priv_rt_assoc_a" {
-  subnet_id      = aws_subnet.priv_a.id
+  subnet_id      = aws_subnet.priv_sub_app_a.id
   route_table_id = aws_route_table.priv_rt_a.id
 }
 
 resource "aws_route_table_association" "priv_rt_assoc_b" {
-  subnet_id      = aws_subnet.priv_b.id
+  subnet_id      = aws_subnet.priv_sub_app_b.id
   route_table_id = aws_route_table.priv_rt_b.id
 }
 
 resource "aws_route_table_association" "priv_rt_assoc_c" {
-  subnet_id      = aws_subnet.priv_c.id
+  subnet_id      = aws_subnet.priv_sub_app_c.id
   route_table_id = aws_route_table.priv_rt_c.id
 }
 
@@ -300,7 +300,7 @@ resource "aws_route_table_association" "priv_rt_assoc_c" {
 
 resource "aws_security_group" "bastion_sg_a" {
   name          = "bastion_sg_a"
-  description   = "Allow SSH"
+  description   = "The Security Group of the Bastion Host"
   vpc_id        = aws_vpc.main.id
 
   tags = {
@@ -311,7 +311,7 @@ resource "aws_security_group" "bastion_sg_a" {
 
 resource "aws_security_group" "bastion_sg_b" {
   name          = "bastion_sg_b"
-  description   = "Allow SSH"
+  description   = "The Security Group of the Bastion Host"
   vpc_id        = aws_vpc.main.id
 
   tags = {
@@ -322,7 +322,7 @@ resource "aws_security_group" "bastion_sg_b" {
 
 resource "aws_security_group" "bastion_sg_c" {
   name          = "bastion_sg_c"
-  description   = "Allow SSH"
+  description   = "The Security Group of the Bastion Host"
   vpc_id        = aws_vpc.main.id
 
   tags = {
@@ -370,11 +370,11 @@ resource "aws_security_group" "app_sg_c" {
 ###   SECURITY GROUP RULES   ###
 ################################
 
-#
+#                 #
 ###   INGRESS   ###
-#
+#                 #
 
-#     BASTION   #
+#     BASTION     #
 
 resource "aws_security_group_rule" "ssh_bastion_a" {
   type              = "ingress"
@@ -524,6 +524,33 @@ resource "aws_security_group_rule" "app_ping_c" {
   security_group_id = aws_security_group.app_sg_c.id
 }
 
+resource "aws_security_group_rule" "app_http_a" {
+  type              = "egress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_a.id
+}
+
+resource "aws_security_group_rule" "app_http_b" {
+  type              = "egress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_b.id
+}
+
+resource "aws_security_group_rule" "app_http_c" {
+  type              = "egress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_c.id
+}
+
 #######################
 ###   DATA SOURCE   ###
 #######################
@@ -580,7 +607,7 @@ resource "aws_instance" "app_host_a" {
   ami                    = data.aws_ssm_parameter.ami.value
   instance_type          = var.instance_type
   key_name               = var.key_name
-  subnet_id              = aws_subnet.priv_a.id
+  subnet_id              = aws_subnet.priv_sub_app_a.id
   vpc_security_group_ids = [aws_security_group.app_sg_a.id]
   tags = {
     Name                 = "${var.namespace}-app_host_a"
@@ -592,7 +619,7 @@ resource "aws_instance" "app_host_b" {
   ami                    = data.aws_ssm_parameter.ami.value
   instance_type          = var.instance_type
   key_name               = var.key_name
-  subnet_id              = aws_subnet.priv_b.id
+  subnet_id              = aws_subnet.priv_sub_app_b.id
   vpc_security_group_ids = [aws_security_group.app_sg_b.id]
   tags = {
     Name                 = "${var.namespace}-app_host_b"
@@ -604,7 +631,7 @@ resource "aws_instance" "app_host_c" {
   ami                    = data.aws_ssm_parameter.ami.value
   instance_type          = var.instance_type
   key_name               = var.key_name
-  subnet_id              = aws_subnet.priv_c.id
+  subnet_id              = aws_subnet.priv_sub_app_c.id
   vpc_security_group_ids = [aws_security_group.app_sg_c.id]
   tags = {
     Name                 = "${var.namespace}-app_host_c"
