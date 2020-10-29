@@ -26,17 +26,28 @@ variable "ami" {
 variable "vpc_cidr" {
   description = "The CIDR block for VPC"
   type        = string
-  default     = "10.0.0.0/24"
+  default     = "172.16.0.0/16"
 }
 
 variable "pub_sub_cidr" {
   description = "The CIDR block for Public Subnet"
   type        = string
-  default     = "10.0.0.0/26"
+  default     = "172.16.1.0/24"
+}
+
+variable "priv_sub_cidr" {
+  description = "The CIDR block for Private Subnet"
+  type        = string
+  default     = "172.16.4.0/24"
 }
 
 variable "key_name" {
   description = "Key Name for SSH"
+  type        = string
+}
+
+variable "key_path" {
+  description = "Key path for SSH"
   type        = string
 }
 
