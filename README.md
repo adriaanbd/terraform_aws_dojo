@@ -59,7 +59,7 @@ $ ping google.com
 $ yum check-updates
 ```
 
-### Destroy Resources
+#### Destroy Resources
 
 ```
 $ terraform destroy -auto-approve
