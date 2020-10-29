@@ -1,18 +1,16 @@
-# Kata No. 2
+# Kata No. 3
 
 ## Objective
 
-Expand the VPC from Kata No. 1 to include:
-- 1 Private Subnet
-- 1 EC2 Instance
+Expand the VPC from Kata No. 2 to include:
+- An additional Private Subnet
+- Two additional Availability Zone deployments
+- Be able to run `yum check-updates` on instances in private subnet
 
 Constraints:
-The private instance should only be reachable by the Bastion Host through SSH
-The private instance should be able to ping the internet
+The same constraints for Kata No. 2
+The deployments need to be in different Availability Zones
 
 ## Comments
 
-Gotchas:
-- Specific Ingress and Egress rules
-- Cycle error on Security Groups
-- SSH Keychain and Agent Forwarding
+With over 600+ lines of code, it is becoming increasingly burdensome to make changes in the right places.
