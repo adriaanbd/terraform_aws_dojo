@@ -1,15 +1,6 @@
-#########################
-###     MAIN VPC      ###
-#########################
-resource "aws_vpc" "main" {
-  cidr_block            = var.vpc_cidr
-  enable_dns_support    = true  # defaults to true
-  enable_dns_hostnames  = true  # defaults to false
-
-  tags = {
-    Name        = "${var.namespace}-vpc"
-    Environment = "dev"
-  }
+module "network" {
+  type   = string
+  source = "./network"
 }
 
 #########################
@@ -19,7 +10,7 @@ resource "aws_vpc" "main" {
 ###   INTERNET GATEWAY  ###
 
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc_id
 
   tags = {
     Name        = "${var.namespace}-igw"
@@ -30,26 +21,26 @@ resource "aws_internet_gateway" "igw" {
 ###   EIP   ###
 
 resource "aws_eip" "nat_eip_a" {
-  vpc         = true
-  depends_on  = [aws_internet_gateway.igw]
+  vpc        = true
+  depends_on = [aws_internet_gateway.igw]
   tags = {
-    Name      = "${var.namespace}-nat_eip_a"
+    Name = "${var.namespace}-nat_eip_a"
   }
 }
 
 resource "aws_eip" "nat_eip_b" {
-  vpc         = true
-  depends_on  = [aws_internet_gateway.igw]
+  vpc        = true
+  depends_on = [aws_internet_gateway.igw]
   tags = {
-    Name      = "${var.namespace}-nat_eip_b"
+    Name = "${var.namespace}-nat_eip_b"
   }
 }
 
 resource "aws_eip" "nat_eip_c" {
-  vpc         = true
-  depends_on  = [aws_internet_gateway.igw]
+  vpc        = true
+  depends_on = [aws_internet_gateway.igw]
   tags = {
-    Name      = "${var.namespace}-nat_eip_c"
+    Name = "${var.namespace}-nat_eip_c"
   }
 }
 
@@ -59,8 +50,8 @@ resource "aws_nat_gateway" "ngw_a" {
   allocation_id = aws_eip.nat_eip_a.id
   subnet_id     = aws_subnet.pub_a.id
   tags = {
-    Name        = "${var.namespace}-ngw_a"
-    Env         = "dev"
+    Name = "${var.namespace}-ngw_a"
+    Env  = "dev"
   }
 }
 
@@ -68,8 +59,8 @@ resource "aws_nat_gateway" "ngw_b" {
   allocation_id = aws_eip.nat_eip_b.id
   subnet_id     = aws_subnet.pub_b.id
   tags = {
-    Name        = "${var.namespace}-ngw_b"
-    Env         = "dev"
+    Name = "${var.namespace}-ngw_b"
+    Env  = "dev"
   }
 }
 
@@ -77,8 +68,8 @@ resource "aws_nat_gateway" "ngw_c" {
   allocation_id = aws_eip.nat_eip_c.id
   subnet_id     = aws_subnet.pub_c.id
   tags = {
-    Name        = "${var.namespace}-ngw_c"
-    Env         = "dev"
+    Name = "${var.namespace}-ngw_c"
+    Env  = "dev"
   }
 }
 
@@ -91,7 +82,7 @@ resource "aws_nat_gateway" "ngw_c" {
 #               #
 
 resource "aws_subnet" "pub_a" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.pub_sub_a_cidr
   availability_zone       = var.az_a
   map_public_ip_on_launch = true
@@ -103,7 +94,7 @@ resource "aws_subnet" "pub_a" {
 }
 
 resource "aws_subnet" "pub_b" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.pub_sub_b_cidr
   availability_zone       = var.az_b
   map_public_ip_on_launch = true
@@ -115,7 +106,7 @@ resource "aws_subnet" "pub_b" {
 }
 
 resource "aws_subnet" "pub_c" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.pub_sub_c_cidr
   availability_zone       = var.az_c
   map_public_ip_on_launch = true
@@ -133,76 +124,76 @@ resource "aws_subnet" "pub_c" {
 ###  APP LAYER   ###
 
 resource "aws_subnet" "priv_sub_app_a" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.priv_sub_app_a_cidr
   availability_zone       = var.az_a
-  map_public_ip_on_launch = false  # accessible via internet gateway
+  map_public_ip_on_launch = false # accessible via internet gateway
 
   tags = {
-    Name                  = "${var.namespace}-priv_sub_app_a"
-    Environment           = "dev"
+    Name        = "${var.namespace}-priv_sub_app_a"
+    Environment = "dev"
   }
 }
 
 resource "aws_subnet" "priv_sub_app_b" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.priv_sub_app_b_cidr
   availability_zone       = var.az_b
   map_public_ip_on_launch = false
 
   tags = {
-    Name                  = "${var.namespace}-priv_sub_app_b"
-    Environment           = "dev"
+    Name        = "${var.namespace}-priv_sub_app_b"
+    Environment = "dev"
   }
 }
 
 resource "aws_subnet" "priv_sub_app_c" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.priv_sub_app_c_cidr
   availability_zone       = var.az_c
   map_public_ip_on_launch = false
 
   tags = {
-    Name                  = "${var.namespace}-priv_sub_app_c"
-    Environment           = "dev"
+    Name        = "${var.namespace}-priv_sub_app_c"
+    Environment = "dev"
   }
 }
 
 ###  DATA LAYER   ###
 
 resource "aws_subnet" "priv_sub_ddbb_a" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.priv_sub_ddbb_a_cidr
   availability_zone       = var.az_a
-  map_public_ip_on_launch = false  # accessible via internet gateway
+  map_public_ip_on_launch = false # accessible via internet gateway
 
   tags = {
-    Name                  = "${var.namespace}-priv_sub_ddbb_a"
-    Environment           = "dev"
+    Name        = "${var.namespace}-priv_sub_ddbb_a"
+    Environment = "dev"
   }
 }
 
 resource "aws_subnet" "priv_sub_ddbb_b" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.priv_sub_ddbb_b_cidr
   availability_zone       = var.az_b
   map_public_ip_on_launch = false
 
   tags = {
-    Name                  = "${var.namespace}-priv_sub_ddbb_b"
-    Environment           = "dev"
+    Name        = "${var.namespace}-priv_sub_ddbb_b"
+    Environment = "dev"
   }
 }
 
 resource "aws_subnet" "priv_sub_ddbb_c" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = module.network.vpc_id
   cidr_block              = var.priv_sub_ddbb_c_cidr
   availability_zone       = var.az_c
   map_public_ip_on_launch = false
 
   tags = {
-    Name                  = "${var.namespace}-priv_sub_ddbb_c"
-    Environment           = "dev"
+    Name        = "${var.namespace}-priv_sub_ddbb_c"
+    Environment = "dev"
   }
 }
 
@@ -213,7 +204,7 @@ resource "aws_subnet" "priv_sub_ddbb_c" {
 ###   PUBLIC    ###
 
 resource "aws_route_table" "pub_rt_a" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc_id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -227,7 +218,7 @@ resource "aws_route_table" "pub_rt_a" {
 }
 
 resource "aws_route_table" "pub_rt_b" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc_id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -241,7 +232,7 @@ resource "aws_route_table" "pub_rt_b" {
 }
 
 resource "aws_route_table" "pub_rt_c" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc_id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -257,10 +248,10 @@ resource "aws_route_table" "pub_rt_c" {
 ###   PRIVATE   ####
 
 resource "aws_route_table" "priv_rt_a" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc_id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.ngw_a.id
   }
 
@@ -271,10 +262,10 @@ resource "aws_route_table" "priv_rt_a" {
 }
 
 resource "aws_route_table" "priv_rt_b" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc_id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.ngw_b.id
   }
 
@@ -285,10 +276,10 @@ resource "aws_route_table" "priv_rt_b" {
 }
 
 resource "aws_route_table" "priv_rt_c" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc_id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.ngw_c.id
   }
 
@@ -343,9 +334,9 @@ resource "aws_route_table_association" "priv_rt_assoc_c" {
 ###   BASTION   ###
 
 resource "aws_security_group" "bastion_sg_a" {
-  name          = "bastion_sg_a"
-  description   = "The Security Group of the Bastion Host"
-  vpc_id        = aws_vpc.main.id
+  name        = "bastion_sg_a"
+  description = "The Security Group of the Bastion Host"
+  vpc_id      = module.network.vpc_id
 
   tags = {
     Name        = "${var.namespace}-bastion_sg_a"
@@ -354,9 +345,9 @@ resource "aws_security_group" "bastion_sg_a" {
 }
 
 resource "aws_security_group" "bastion_sg_b" {
-  name          = "bastion_sg_b"
-  description   = "The Security Group of the Bastion Host"
-  vpc_id        = aws_vpc.main.id
+  name        = "bastion_sg_b"
+  description = "The Security Group of the Bastion Host"
+  vpc_id      = module.network.vpc_id
 
   tags = {
     Name        = "${var.namespace}-bastion_sg_b"
@@ -365,9 +356,9 @@ resource "aws_security_group" "bastion_sg_b" {
 }
 
 resource "aws_security_group" "bastion_sg_c" {
-  name          = "bastion_sg_c"
-  description   = "The Security Group of the Bastion Host"
-  vpc_id        = aws_vpc.main.id
+  name        = "bastion_sg_c"
+  description = "The Security Group of the Bastion Host"
+  vpc_id      = module.network.vpc_id
 
   tags = {
     Name        = "${var.namespace}-bastion_sg_c"
@@ -378,9 +369,9 @@ resource "aws_security_group" "bastion_sg_c" {
 ###     APP     ###
 
 resource "aws_security_group" "app_sg_a" {
-  name          = "app_sg_a"
-  description   = "The Security Group of the App"
-  vpc_id        = aws_vpc.main.id
+  name        = "app_sg_a"
+  description = "The Security Group of the App"
+  vpc_id      = module.network.vpc_id
 
   tags = {
     Name        = "${var.namespace}-app_sg_a"
@@ -389,9 +380,9 @@ resource "aws_security_group" "app_sg_a" {
 }
 
 resource "aws_security_group" "app_sg_b" {
-  name          = "app_sg_b"
-  description   = "The Security Group of the App"
-  vpc_id        = aws_vpc.main.id
+  name        = "app_sg_b"
+  description = "The Security Group of the App"
+  vpc_id      = module.network.vpc_id
 
   tags = {
     Name        = "${var.namespace}-app_sg_b"
@@ -400,9 +391,9 @@ resource "aws_security_group" "app_sg_b" {
 }
 
 resource "aws_security_group" "app_sg_c" {
-  name          = "app_sg_c"
-  description   = "The Security Group of the App"
-  vpc_id        = aws_vpc.main.id
+  name        = "app_sg_c"
+  description = "The Security Group of the App"
+  vpc_id      = module.network.vpc_id
 
   tags = {
     Name        = "${var.namespace}-app_sg_c"
@@ -450,30 +441,30 @@ resource "aws_security_group_rule" "ssh_bastion_c" {
 #      APP     #
 
 resource "aws_security_group_rule" "ssh_from_jump_a" {
-  type                      = "ingress"
-  from_port                 = 22
-  to_port                   = 22
-  protocol                  = "tcp"
-  source_security_group_id  = aws_security_group.bastion_sg_a.id
-  security_group_id         = aws_security_group.app_sg_a.id
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg_a.id
+  security_group_id        = aws_security_group.app_sg_a.id
 }
 
 resource "aws_security_group_rule" "ssh_from_jump_b" {
-  type                      = "ingress"
-  from_port                 = 22
-  to_port                   = 22
-  protocol                  = "tcp"
-  source_security_group_id  = aws_security_group.bastion_sg_b.id
-  security_group_id         = aws_security_group.app_sg_b.id
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg_b.id
+  security_group_id        = aws_security_group.app_sg_b.id
 }
 
 resource "aws_security_group_rule" "ssh_from_jump_c" {
-  type                      = "ingress"
-  from_port                 = 22
-  to_port                   = 22
-  protocol                  = "tcp"
-  source_security_group_id  = aws_security_group.bastion_sg_c.id
-  security_group_id         = aws_security_group.app_sg_c.id
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg_c.id
+  security_group_id        = aws_security_group.app_sg_c.id
 }
 
 #
@@ -483,39 +474,39 @@ resource "aws_security_group_rule" "ssh_from_jump_c" {
 #    BASTION SSH  #
 
 resource "aws_security_group_rule" "ssh_jump_a" {
-  type                      = "egress"
-  from_port                 = 22
-  to_port                   = 22
-  protocol                  = "tcp"
-  source_security_group_id  = aws_security_group.app_sg_a.id
-  security_group_id         = aws_security_group.bastion_sg_a.id
+  type                     = "egress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.app_sg_a.id
+  security_group_id        = aws_security_group.bastion_sg_a.id
 }
 
 resource "aws_security_group_rule" "ssh_jump_b" {
-  type                      = "egress"
-  from_port                 = 22
-  to_port                   = 22
-  protocol                  = "tcp"
-  source_security_group_id  = aws_security_group.app_sg_b.id
-  security_group_id         = aws_security_group.bastion_sg_b.id
+  type                     = "egress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.app_sg_b.id
+  security_group_id        = aws_security_group.bastion_sg_b.id
 }
 
 resource "aws_security_group_rule" "ssh_jump_c" {
-  type                      = "egress"
-  from_port                 = 22
-  to_port                   = 22
-  protocol                  = "tcp"
-  source_security_group_id  = aws_security_group.app_sg_c.id
-  security_group_id         = aws_security_group.bastion_sg_c.id
+  type                     = "egress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.app_sg_c.id
+  security_group_id        = aws_security_group.bastion_sg_c.id
 }
 
 #   BASTION ECHO REQUEST    #
 
 resource "aws_security_group_rule" "bastion_ping_a" {
-  type              = "egress"
+  type = "egress"
   # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml
-  from_port         = 8  # echo request
-  to_port           = 0  # echo reply
+  from_port         = 8 # echo request
+  to_port           = 0 # echo reply
   protocol          = "icmp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.bastion_sg_a.id
@@ -654,8 +645,8 @@ resource "aws_instance" "app_host_a" {
   subnet_id              = aws_subnet.priv_sub_app_a.id
   vpc_security_group_ids = [aws_security_group.app_sg_a.id]
   tags = {
-    Name                 = "${var.namespace}-app_host_a"
-    Env                  = "dev"
+    Name = "${var.namespace}-app_host_a"
+    Env  = "dev"
   }
 }
 
@@ -666,8 +657,8 @@ resource "aws_instance" "app_host_b" {
   subnet_id              = aws_subnet.priv_sub_app_b.id
   vpc_security_group_ids = [aws_security_group.app_sg_b.id]
   tags = {
-    Name                 = "${var.namespace}-app_host_b"
-    Env                  = "dev"
+    Name = "${var.namespace}-app_host_b"
+    Env  = "dev"
   }
 }
 
@@ -678,7 +669,7 @@ resource "aws_instance" "app_host_c" {
   subnet_id              = aws_subnet.priv_sub_app_c.id
   vpc_security_group_ids = [aws_security_group.app_sg_c.id]
   tags = {
-    Name                 = "${var.namespace}-app_host_c"
-    Env                  = "dev"
+    Name = "${var.namespace}-app_host_c"
+    Env  = "dev"
   }
 }

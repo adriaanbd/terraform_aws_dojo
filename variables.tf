@@ -30,7 +30,6 @@ variable "az_c" {
 variable "ami" {
   description = "Name of the AWS SSM Parameter for Amazon Machine Image"
   type        = string
-  # Amazon Linux 2 AMI (HVM) - Free Tier
   default     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 }
 
