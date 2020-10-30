@@ -9,25 +9,8 @@ variable "region" {
   type        = string
 }
 
-variable "ami" {
-  description = "Name of the AWS SSM Parameter for Amazon Machine Image"
-  type        = string
-  default     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
-}
-
-variable "vpc_cidr" {
-  description = "The CIDR block for VPC"
-  type        = string
-  default     = "172.16.0.0/16"
-}
-
-variable "key_name" {
+variable "key_pair_name" {
   description = "Key Name for SSH"
   type        = string
-}
-
-variable "instance_type" {
-  description = "EC2 Instance Type"
-  default     = "t2.micro"
-  type        = string
+  default     = "my_key_pair"
 }

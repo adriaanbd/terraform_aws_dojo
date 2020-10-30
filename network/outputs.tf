@@ -18,17 +18,17 @@ output "pub_c_id" {
   value       = aws_subnet.pub_c.id
 }
 
-output "priv_sub_app_a_id" {
+output "priv_a_id" {
   description = "The ID of the Subnet of App A"
   value       = aws_subnet.priv_sub_app_a.id
 }
 
-output "piv_sub_app_b_id" {
+output "priv_b_id" {
   description = "The ID of the Subnet of App B"
   value       = aws_subnet.priv_sub_app_b.id
 }
 
-output "piv_sub_app_c_id" {
+output "priv_c_id" {
   description = "The ID of the Subnet of App C"
   value       = aws_subnet.priv_sub_app_c.id
 }
