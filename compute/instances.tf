@@ -50,41 +50,41 @@ resource "aws_instance" "bastion_host_c" {
 
 ###        APP          ###
 
-resource "aws_instance" "app_host_a" {
-  ami                    = data.aws_ssm_parameter.ami.value
-  instance_type          = var.instance_type
-  key_name               = aws_key_pair.key_pair.key_name
-  subnet_id              = var.priv_a_id
-  vpc_security_group_ids = [var.app_sg_a]
+# resource "aws_instance" "app_host_a" {
+#   ami                    = data.aws_ssm_parameter.ami.value
+#   instance_type          = var.instance_type
+#   key_name               = aws_key_pair.key_pair.key_name
+#   subnet_id              = var.priv_a_id
+#   vpc_security_group_ids = [var.app_sg_a_id]
 
-  tags = {
-    Name = "${var.namespace}-app_host_a"
-    Env  = "dev"
-  }
-}
+#   tags = {
+#     Name = "${var.namespace}-app_host_a"
+#     Env  = "dev"
+#   }
+# }
 
-resource "aws_instance" "app_host_b" {
-  ami                    = data.aws_ssm_parameter.ami.value
-  instance_type          = var.instance_type
-  key_name               = aws_key_pair.key_pair.key_name
-  subnet_id              = var.priv_b_id
-  vpc_security_group_ids = [var.app_sg_b]
+# resource "aws_instance" "app_host_b" {
+#   ami                    = data.aws_ssm_parameter.ami.value
+#   instance_type          = var.instance_type
+#   key_name               = aws_key_pair.key_pair.key_name
+#   subnet_id              = var.priv_b_id
+#   vpc_security_group_ids = [var.app_sg_b_id]
 
-  tags = {
-    Name = "${var.namespace}-app_host_b"
-    Env  = "dev"
-  }
-}
+#   tags = {
+#     Name = "${var.namespace}-app_host_b"
+#     Env  = "dev"
+#   }
+# }
 
-resource "aws_instance" "app_host_c" {
-  ami                    = data.aws_ssm_parameter.ami.value
-  instance_type          = var.instance_type
-  key_name               = aws_key_pair.key_pair.key_name
-  subnet_id              = var.priv_c_id
-  vpc_security_group_ids = [var.app_sg_c]
+# resource "aws_instance" "app_host_c" {
+#   ami                    = data.aws_ssm_parameter.ami.value
+#   instance_type          = var.instance_type
+#   key_name               = aws_key_pair.key_pair.key_name
+#   subnet_id              = var.priv_c_id
+#   vpc_security_group_ids = [var.app_sg_c_id]
 
-  tags = {
-    Name = "${var.namespace}-app_host_c"
-    Env  = "dev"
-  }
-}
+#   tags = {
+#     Name = "${var.namespace}-app_host_c"
+#     Env  = "dev"
+#   }
+# }
