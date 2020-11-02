@@ -64,21 +64,34 @@ variable "bastion_sg_c" {
   type = string
 }
 
-variable "app_sg_a" {
+variable "app_sg_a_id" {
   type = string
 }
 
-variable "app_sg_b" {
+variable "app_sg_b_id" {
   type = string
 }
 
-variable "app_sg_c" {
+variable "app_sg_c_id" {
   type = string
 }
 
 variable "ecs_cluster_name" {
   type        = string
   description = "Name of the ECS Cluster"
+  default     = "test-cluster"
+}
+
+variable "ecs_service_name" {
+  type        = string
+  description = "Name of the ECS Service"
+  default     = "test-service"
+}
+
+variable "ecs_task_name" {
+  type        = string
+  description = "Name of the ECS Task"
+  default     = "test-task"
 }
 
 variable "ecs_profile_name" {
@@ -86,40 +99,25 @@ variable "ecs_profile_name" {
   description = "Name of the IAM ECS Instance Profile"
 }
 
-variable "ecs_service_role_name" {
-  type        = string
-  description = "Name of the ECS Service Role"
-}
-
-variable "ecs_service_name" {
-  type        = string
-  description = "Name of the ECS Service"
-  default     = "hello-service"
-}
+# variable "ecs_service_role_name" {
+#   type        = string
+#   description = "Name of the ECS Service Role"
+# }
 
 variable "asg_min" {
   type        = number
   description = "Minimum number of instances in Autoscaling Group for ECS"
+  default     = 1
 }
 
 variable "asg_max" {
   type        = number
   description = "Maximum number of instances in Autoscaling Group for ECS"
+  default     = 1
 }
 
 variable "asg_desired" {
   type        = number
   description = "Desired number of instances in Autoscaling Group for ECS"
-}
-
-variable "app_sub_a" {
-  type = string
-}
-
-variable "app_sub_b" {
-  type = string
-}
-
-variable "app_sub_c" {
-  type = string
+  default     = 1
 }
