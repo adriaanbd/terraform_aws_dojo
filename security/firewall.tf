@@ -134,6 +134,35 @@ resource "aws_security_group_rule" "ssh_from_jump_c" {
   security_group_id        = aws_security_group.app_sg_c.id
 }
 
+#######    APP HTTP       ######
+
+resource "aws_security_group_rule" "app_http_a" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_a.id
+}
+
+resource "aws_security_group_rule" "app_http_b" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_b.id
+}
+
+resource "aws_security_group_rule" "app_http_c" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_c.id
+}
+
 ###################################
 ###        EGRESS RULES         ###
 ###################################
