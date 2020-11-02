@@ -21,3 +21,11 @@ output "app_sg_b" {
 output "app_sg_c" {
     value = aws_security_group.app_sg_c.id
 }
+
+output "ecs_profile_id" {
+    value = aws_iam_instance_profile.ecs_instance_profile.id
+}
+
+output "ecs_service_role_name" {
+    value = aws_iam_role.ecs_role.name
+}
