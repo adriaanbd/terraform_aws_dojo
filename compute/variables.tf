@@ -15,10 +15,17 @@ variable "instance_type" {
   type        = string
 }
 
-variable "ami" {
-  description = "Name of the AWS SSM Parameter for Amazon Machine Image"
+variable "ami_ssm_param_name" {
+  description = "Parameter name of the AWS SSM Parameter for Amazon Machine Image"
   type        = string
   default     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+}
+
+variable "ecs_ami_from_ssm" {
+  # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html
+  description = "ID of the Optimized AMI for ECS"
+  type        = string
+  default     = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended"
 }
 
 variable "pub_a_id" {
@@ -66,5 +73,42 @@ variable "app_sg_b" {
 }
 
 variable "app_sg_c" {
+  type = string
+}
+
+variable "ecs_cluster_name" {
+  type        = string
+  description = "Name of the ECS Cluster"
+}
+
+variable "ecs_profile_name" {
+  type        = string
+  description = "Name of the IAM ECS Instance Profile"
+}
+
+variable "asg_min" {
+  type        = number
+  description = "Minimum number of instances in Autoscaling Group for ECS"
+}
+
+variable "asg_max" {
+  type        = number
+  description = "Maximum number of instances in Autoscaling Group for ECS"
+}
+
+variable "asg_desired" {
+  type        = number
+  description = "Desired number of instances in Autoscaling Group for ECS"
+}
+
+variable "app_sub_a" {
+  type = string
+}
+
+variable "app_sub_b" {
+  type = string
+}
+
+variable "app_sub_c" {
   type = string
 }

@@ -3,7 +3,7 @@
 #######################
 
 data "aws_ssm_parameter" "ami" {
-  name = var.ami
+  name = var.ami_ssm_param_name
 }
 
 #######################
