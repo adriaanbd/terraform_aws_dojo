@@ -8,11 +8,11 @@ variable "vpc_id" {
     description = "ID of the Main VPC"
 }
 
-variable "ecs_service_role_name" {
-  type          = string
-  description   = "Given name of the ECS service role"
-  default       = "ecs-service-role"
-}
+# variable "ecs_service_role_name" {
+#   type          = string
+#   description   = "Given name of the ECS service role"
+#   default       = "ecs-service-role"
+# }
 
 variable "ecs_instance_role_name" {
   type          = string
