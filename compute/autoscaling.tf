@@ -13,7 +13,7 @@ resource "aws_launch_template" "ecs_launch_temp" {
   key_name               = var.key_pair_name
   user_data              = <<EOF
                            #!/bin/bash
-                           echo ECS_CLUSTER=${var.ecs_cluster_name} >> /etc/ecs/ecs.config
+                           echo ECS_CLUSTER=${var.ecs_cluster_name}; echo ECS_BACKEND_HOST >> /etc/ecs/ecs.config
                            EOF
 }
 

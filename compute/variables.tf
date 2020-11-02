@@ -86,6 +86,17 @@ variable "ecs_profile_name" {
   description = "Name of the IAM ECS Instance Profile"
 }
 
+variable "ecs_service_role_name" {
+  type        = string
+  description = "Name of the ECS Service Role"
+}
+
+variable "ecs_service_name" {
+  type        = string
+  description = "Name of the ECS Service"
+  default     = "hello-service"
+}
+
 variable "asg_min" {
   type        = number
   description = "Minimum number of instances in Autoscaling Group for ECS"
