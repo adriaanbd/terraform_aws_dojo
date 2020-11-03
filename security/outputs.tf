@@ -30,6 +30,6 @@ output "ecs_profile_id" {
 #   value = aws_iam_role.ecs_role.name
 # }
 
-output "ecs_instance_profile_name" {
-  value = aws_iam_instance_profile.ecs_instance_profile.name
+output "ecs_instance_profile_arn" {
+  value = aws_iam_instance_profile.ecs_instance_profile.arn
 }

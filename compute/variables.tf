@@ -94,9 +94,9 @@ variable "ecs_task_name" {
   default     = "test-task"
 }
 
-variable "ecs_profile_name" {
+variable "ecs_profile_arn" {
   type        = string
-  description = "Name of the IAM ECS Instance Profile"
+  description = "ARN of the IAM ECS Instance Profile"
 }
 
 # variable "ecs_service_role_name" {

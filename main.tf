@@ -25,6 +25,6 @@ module "compute" {
   app_sg_a_id           = module.security.app_sg_a
   app_sg_b_id           = module.security.app_sg_b
   app_sg_c_id           = module.security.app_sg_c
-  ecs_profile_name      = module.security.ecs_instance_profile_name
+  ecs_profile_arn       = module.security.ecs_instance_profile_arn
   # ecs_service_role_name = module.security.ecs_service_role_name
 }
