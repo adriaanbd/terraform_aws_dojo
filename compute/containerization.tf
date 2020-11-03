@@ -7,7 +7,8 @@ resource "aws_ecs_task_definition" "ecs_task" {
   family                   = var.ecs_task_name
   container_definitions    = file("${path.module}/container_definitions.json")
   requires_compatibilities = ["EC2"]
-
+  memory  = 300
+  cpu     = 250
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service_definition_parameters.html
