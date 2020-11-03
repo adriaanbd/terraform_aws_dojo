@@ -12,5 +12,5 @@ resource "aws_key_pair" "key_pair" {
 
 resource "local_file" "my_key_file" {
   content     = tls_private_key.key.private_key_pem
-  filename    = "my_key_file.pem"
+  filename    = pathexpand("~/.ssh/${var.key_pair_name}.pem")
 }
