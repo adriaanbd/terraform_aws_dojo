@@ -136,7 +136,7 @@ resource "aws_security_group_rule" "ssh_from_jump_c" {
 
 #######    APP HTTP       ######
 
-resource "aws_security_group_rule" "app_http_a" {
+resource "aws_security_group_rule" "app_http_in_a" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
@@ -145,7 +145,7 @@ resource "aws_security_group_rule" "app_http_a" {
   security_group_id = aws_security_group.app_sg_a.id
 }
 
-resource "aws_security_group_rule" "app_http_b" {
+resource "aws_security_group_rule" "app_http_in_b" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
@@ -154,11 +154,40 @@ resource "aws_security_group_rule" "app_http_b" {
   security_group_id = aws_security_group.app_sg_b.id
 }
 
-resource "aws_security_group_rule" "app_http_c" {
+resource "aws_security_group_rule" "app_http_in_c" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_c.id
+}
+
+#######    APP PING      ######
+
+resource "aws_security_group_rule" "app_ping_in_a" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 8
+  protocol          = "icmp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_a.id
+}
+
+resource "aws_security_group_rule" "app_ping_in_b" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 8
+  protocol          = "icmp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_sg_b.id
+}
+
+resource "aws_security_group_rule" "app_ping_in_c" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 8
+  protocol          = "icmp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.app_sg_c.id
 }
@@ -257,7 +286,7 @@ resource "aws_security_group_rule" "app_ping_c" {
 
 #######    APP HTTP       ######
 
-resource "aws_security_group_rule" "app_http_a" {
+resource "aws_security_group_rule" "app_http_out_a" {
   type              = "egress"
   from_port         = 80
   to_port           = 80
@@ -266,7 +295,7 @@ resource "aws_security_group_rule" "app_http_a" {
   security_group_id = aws_security_group.app_sg_a.id
 }
 
-resource "aws_security_group_rule" "app_http_b" {
+resource "aws_security_group_rule" "app_http_out_b" {
   type              = "egress"
   from_port         = 80
   to_port           = 80
@@ -275,7 +304,7 @@ resource "aws_security_group_rule" "app_http_b" {
   security_group_id = aws_security_group.app_sg_b.id
 }
 
-resource "aws_security_group_rule" "app_http_c" {
+resource "aws_security_group_rule" "app_http_out_c" {
   type              = "egress"
   from_port         = 80
   to_port           = 80
