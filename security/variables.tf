@@ -23,7 +23,7 @@ variable "ecs_instance_role_name" {
 variable "ecs_instance_profile_name" {
   type          = string
   description   = "Given name of the ECS instance profile"
-  default       = "ecs-instance_profile"
+  default       = "ecs-instance-profile"
 }
 
 
